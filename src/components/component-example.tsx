@@ -8,12 +8,14 @@ import {
   CodeIcon,
   ComputerIcon,
   CreditCardIcon,
+  Delete02Icon,
   DownloadIcon,
   EyeIcon,
   File01Icon,
   FileIcon,
   FloppyDiskIcon,
   FolderIcon,
+  FolderLibraryIcon,
   FolderOpenIcon,
   HelpCircleIcon,
   KeyboardIcon,
@@ -106,6 +108,7 @@ export function ComponentExample() {
       <FormExample />
       <LogoutExample />
       <OrganizationExample />
+      <ProjectExample />
     </ExampleWrapper>
   );
 }
@@ -301,6 +304,157 @@ function OrganizationExample() {
                     disabled={activeOrg?.id === org.id}
                   >
                     {activeOrg?.id === org.id ? "Active" : "Set Active"}
+                  </Button>
+                </div>
+              ))
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </Example>
+  );
+}
+
+interface Project {
+  id: string;
+  name: string;
+  description: string | null;
+  organizationId: string;
+  createdAt: string;
+}
+
+function ProjectExample() {
+  const { data: activeOrg } = authClient.useActiveOrganization();
+  const [projects, setProjects] = React.useState<Project[]>([]);
+  const [projectName, setProjectName] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const fetchProjects = React.useCallback(async () => {
+    if (!activeOrg) return;
+    try {
+      const res = await fetch("/api/projects");
+      if (res.ok) {
+        const data = await res.json();
+        setProjects(data);
+      }
+    } catch {
+      console.error("Failed to fetch projects");
+    }
+  }, [activeOrg]);
+
+  React.useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  const handleCreateProject = async () => {
+    if (!projectName.trim() || !activeOrg) return;
+    setIsLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: projectName }),
+      });
+      if (res.ok) {
+        setProjectName("");
+        fetchProjects();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to create project");
+      }
+    } catch {
+      setError("Failed to create project");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    try {
+      const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        fetchProjects();
+      }
+    } catch {
+      console.error("Failed to delete project");
+    }
+  };
+
+  if (!activeOrg) {
+    return (
+      <Example title="Projects">
+        <Card className="w-full max-w-sm">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">
+              Select an organization first
+            </p>
+          </CardContent>
+        </Card>
+      </Example>
+    );
+  }
+
+  return (
+    <Example title="Projects">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HugeiconsIcon
+              icon={FolderLibraryIcon}
+              strokeWidth={2}
+              className="size-5"
+            />
+            Projects
+          </CardTitle>
+          <CardDescription>{activeOrg.name}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          <div className="flex gap-2">
+            <Input
+              placeholder="Project name"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              disabled={isLoading}
+            />
+            <Button
+              onClick={handleCreateProject}
+              disabled={isLoading || !projectName.trim()}
+              size="icon"
+            >
+              <HugeiconsIcon icon={PlusSignIcon} strokeWidth={2} />
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {projects.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No projects yet</p>
+            ) : (
+              projects.map((project) => (
+                <div
+                  key={project.id}
+                  className="flex items-center justify-between rounded-md border p-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <HugeiconsIcon
+                      icon={FolderIcon}
+                      strokeWidth={2}
+                      className="size-4"
+                    />
+                    <span className="text-sm font-medium">{project.name}</span>
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="size-8 text-destructive hover:text-destructive"
+                    onClick={() => handleDeleteProject(project.id)}
+                  >
+                    <HugeiconsIcon
+                      icon={Delete02Icon}
+                      strokeWidth={2}
+                      className="size-4"
+                    />
                   </Button>
                 </div>
               ))

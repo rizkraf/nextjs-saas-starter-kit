@@ -1,5 +1,5 @@
-/** biome-ignore-all lint/performance/noImgElement: <explanation> */
-/** biome-ignore-all lint/a11y/noRedundantAlt: <explanation> */
+/** biome-ignore-all lint/performance/noImgElement: false */
+/** biome-ignore-all lint/a11y/noRedundantAlt: false */
 "use client";
 
 import {
@@ -33,6 +33,7 @@ import {
   UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { Example, ExampleWrapper } from "@/components/example";
 import {
@@ -94,13 +95,99 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { authClient } from "@/lib/auth-client";
 
 export function ComponentExample() {
   return (
     <ExampleWrapper>
       <CardExample />
       <FormExample />
+      <LogoutExample />
     </ExampleWrapper>
+  );
+}
+
+function LogoutExample() {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.push("/sign-in");
+  };
+
+  if (isPending) {
+    return (
+      <Example title="Session">
+        <Card className="w-full max-w-sm">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">Loading...</p>
+          </CardContent>
+        </Card>
+      </Example>
+    );
+  }
+
+  if (!session) {
+    return (
+      <Example title="Session">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Not Signed In</CardTitle>
+            <CardDescription>Sign in to see your account</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => router.push("/sign-in")} className="w-full">
+              Sign in
+            </Button>
+          </CardContent>
+        </Card>
+      </Example>
+    );
+  }
+
+  return (
+    <Example title="Session">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            {session.user.image ? (
+              <img
+                src={session.user.image}
+                alt={session.user.name || "User"}
+                className="size-12 rounded-full"
+              />
+            ) : (
+              <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <HugeiconsIcon
+                  icon={UserIcon}
+                  strokeWidth={2}
+                  className="size-6"
+                />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <CardTitle className="truncate">
+                {session.user.name || "User"}
+              </CardTitle>
+              <CardDescription className="truncate">
+                {session.user.email}
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Button
+            onClick={handleLogout}
+            variant="destructive"
+            className="w-full"
+          >
+            <HugeiconsIcon icon={LogoutIcon} strokeWidth={2} />
+            Sign out
+          </Button>
+        </CardContent>
+      </Card>
+    </Example>
   );
 }
 

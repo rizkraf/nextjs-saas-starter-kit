@@ -109,6 +109,7 @@ export function ComponentExample() {
       <LogoutExample />
       <OrganizationExample />
       <ProjectExample />
+      <BillingExample />
     </ExampleWrapper>
   );
 }
@@ -458,6 +459,186 @@ function ProjectExample() {
                   </Button>
                 </div>
               ))
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </Example>
+  );
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  priceMonthly: number;
+  features: string[];
+}
+
+interface Subscription {
+  id: string;
+  status: string;
+  currentPeriodEnd: string;
+  plan: Plan;
+}
+
+function BillingExample() {
+  const { data: activeOrg } = authClient.useActiveOrganization();
+  const [plans, setPlans] = React.useState<Plan[]>([]);
+  const [subscription, setSubscription] = React.useState<Subscription | null>(
+    null,
+  );
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null);
+
+  const fetchSubscription = React.useCallback(async () => {
+    if (!activeOrg) return;
+    try {
+      const res = await fetch("/api/billing/subscription");
+      if (res.ok) {
+        const data = await res.json();
+        setSubscription(data);
+      }
+    } catch {
+      console.error("Failed to fetch subscription");
+    }
+  }, [activeOrg]);
+
+  React.useEffect(() => {
+    fetch("/api/billing/plans")
+      .then((res) => res.json())
+      .then((data) => setPlans(data))
+      .catch(console.error);
+  }, []);
+
+  React.useEffect(() => {
+    fetchSubscription();
+  }, [fetchSubscription]);
+
+  const formatIDR = (amount: number) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(amount);
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+  const handleSubscribe = async (planId: string) => {
+    if (!activeOrg) return;
+    setIsLoading(true);
+    setSelectedPlan(planId);
+    try {
+      const res = await fetch("/api/billing/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId }),
+      });
+      const data = await res.json();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      }
+    } catch (error) {
+      console.error("Subscribe error:", error);
+    } finally {
+      setIsLoading(false);
+      setSelectedPlan(null);
+    }
+  };
+
+  if (!activeOrg) {
+    return (
+      <Example title="Billing">
+        <Card className="w-full max-w-sm">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">
+              Select an organization first
+            </p>
+          </CardContent>
+        </Card>
+      </Example>
+    );
+  }
+
+  return (
+    <Example title="Billing">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HugeiconsIcon
+              icon={CreditCardIcon}
+              strokeWidth={2}
+              className="size-5"
+            />
+            Subscription Plans
+          </CardTitle>
+          <CardDescription>Choose a plan for {activeOrg.name}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Active Subscription */}
+          {subscription && (
+            <div className="rounded-lg border border-green-500/50 bg-green-50 p-3 dark:bg-green-950/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-green-700 dark:text-green-400">
+                    Active: {subscription.plan.name}
+                  </p>
+                  <p className="text-xs text-green-600 dark:text-green-500">
+                    Expires: {formatDate(subscription.currentPeriodEnd)}
+                  </p>
+                </div>
+                <span className="rounded-full bg-green-500 px-2 py-0.5 text-xs font-medium text-white">
+                  {subscription.status}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Plans List */}
+          <div className="space-y-2">
+            {plans.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No plans available
+              </p>
+            ) : (
+              plans.map((plan) => {
+                const isCurrentPlan = subscription?.plan.id === plan.id;
+                return (
+                  <div
+                    key={plan.id}
+                    className={`flex items-center justify-between rounded-lg border p-3 ${
+                      isCurrentPlan ? "border-primary bg-primary/5" : ""
+                    }`}
+                  >
+                    <div>
+                      <p className="font-medium">{plan.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {plan.priceMonthly === 0
+                          ? "Free"
+                          : formatIDR(plan.priceMonthly) + "/mo"}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={isCurrentPlan ? "outline" : "default"}
+                      onClick={() => handleSubscribe(plan.id)}
+                      disabled={isLoading || isCurrentPlan}
+                    >
+                      {isLoading && selectedPlan === plan.id
+                        ? "Loading..."
+                        : isCurrentPlan
+                          ? "Current"
+                          : "Subscribe"}
+                    </Button>
+                  </div>
+                );
+              })
             )}
           </div>
         </CardContent>

@@ -15,6 +15,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
+    "db:seed": "bun run prisma/seed.ts",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down"
   },
@@ -29,6 +30,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
+    "midtrans-client": "^1.4.3",
     "next": "16.0.10",
     "pg": "^8.16.3",
     "prisma": "^7.1.0",
@@ -45,6 +47,7 @@
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@tailwindcss/postcss": "^4",
+    "@types/midtrans-client": "^1.4.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -83,15 +83,17 @@ model Verification {
 }
 
 model Organization {
-  id          String       @id
-  name        String
-  slug        String
-  logo        String?
-  createdAt   DateTime
-  metadata    String?
-  members     Member[]
-  invitations Invitation[]
-  projects    Project[]
+  id           String        @id
+  name         String
+  slug         String
+  logo         String?
+  createdAt    DateTime
+  metadata     String?
+  members      Member[]
+  invitations  Invitation[]
+  projects     Project[]
+  subscription Subscription?
+  transactions Transaction[]
 
   @@unique([slug])
   @@map("organization")
@@ -139,4 +141,59 @@ model Project {
 
   @@index([organizationId])
   @@map("project")
+}
+
+model Plan {
+  id            String         @id @default(uuid())
+  name          String
+  slug          String         @unique
+  description   String?
+  priceMonthly  Int // Price in IDR
+  priceYearly   Int? // Annual price in IDR
+  features      String[] // Array of features
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+
+  @@map("plan")
+}
+
+model Subscription {
+  id                 String        @id @default(uuid())
+  organizationId     String
+  organization       Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  planId             String
+  plan               Plan          @relation(fields: [planId], references: [id])
+  status             String        @default("active") // active, cancelled, expired, past_due
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean       @default(false)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  transactions       Transaction[]
+
+  @@unique([organizationId])
+  @@index([planId])
+  @@map("subscription")
+}
+
+model Transaction {
+  id               String        @id @default(uuid())
+  orderId          String        @unique // Midtrans order ID
+  subscriptionId   String?
+  subscription     Subscription? @relation(fields: [subscriptionId], references: [id])
+  organizationId   String
+  organization     Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  planId           String? // The plan being purchased
+  amount           Int // Amount in IDR
+  status           String        @default("pending") // pending, success, failed, expired
+  paymentType      String? // gopay, qris, bank_transfer, credit_card, etc
+  midtransResponse Json? // Raw Midtrans response
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([organizationId])
+  @@index([subscriptionId])
+  @@map("transaction")
 }

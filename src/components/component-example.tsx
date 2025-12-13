@@ -4,6 +4,7 @@
 
 import {
   BluetoothIcon,
+  Building03Icon,
   CodeIcon,
   ComputerIcon,
   CreditCardIcon,
@@ -30,6 +31,7 @@ import {
   SettingsIcon,
   ShieldIcon,
   SunIcon,
+  UserGroupIcon,
   UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -103,6 +105,7 @@ export function ComponentExample() {
       <CardExample />
       <FormExample />
       <LogoutExample />
+      <OrganizationExample />
     </ExampleWrapper>
   );
 }
@@ -185,6 +188,124 @@ function LogoutExample() {
             <HugeiconsIcon icon={LogoutIcon} strokeWidth={2} />
             Sign out
           </Button>
+        </CardContent>
+      </Card>
+    </Example>
+  );
+}
+
+function OrganizationExample() {
+  const { data: session } = authClient.useSession();
+  const { data: organizations, isPending: orgsLoading } =
+    authClient.useListOrganizations();
+  const { data: activeOrg } = authClient.useActiveOrganization();
+  const [orgName, setOrgName] = React.useState("");
+  const [isCreating, setIsCreating] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const handleCreateOrg = async () => {
+    if (!orgName.trim()) return;
+    setIsCreating(true);
+    setError("");
+    try {
+      const slug = orgName.toLowerCase().replace(/\s+/g, "-");
+      await authClient.organization.create({ name: orgName, slug });
+      setOrgName("");
+    } catch {
+      setError("Failed to create organization");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleSetActive = async (orgId: string) => {
+    try {
+      await authClient.organization.setActive({ organizationId: orgId });
+    } catch {
+      setError("Failed to set active organization");
+    }
+  };
+
+  if (!session) {
+    return (
+      <Example title="Organizations">
+        <Card className="w-full max-w-sm">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">
+              Sign in to manage organizations
+            </p>
+          </CardContent>
+        </Card>
+      </Example>
+    );
+  }
+
+  return (
+    <Example title="Organizations">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HugeiconsIcon
+              icon={UserGroupIcon}
+              strokeWidth={2}
+              className="size-5"
+            />
+            Organizations
+          </CardTitle>
+          <CardDescription>
+            {activeOrg ? `Active: ${activeOrg.name}` : "No active organization"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          <div className="flex gap-2">
+            <Input
+              placeholder="Organization name"
+              value={orgName}
+              onChange={(e) => setOrgName(e.target.value)}
+              disabled={isCreating}
+            />
+            <Button
+              onClick={handleCreateOrg}
+              disabled={isCreating || !orgName.trim()}
+              size="icon"
+            >
+              <HugeiconsIcon icon={PlusSignIcon} strokeWidth={2} />
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {orgsLoading ? (
+              <p className="text-sm text-muted-foreground">Loading...</p>
+            ) : organizations?.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No organizations yet
+              </p>
+            ) : (
+              organizations?.map((org) => (
+                <div
+                  key={org.id}
+                  className="flex items-center justify-between rounded-md border p-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <HugeiconsIcon
+                      icon={Building03Icon}
+                      strokeWidth={2}
+                      className="size-4"
+                    />
+                    <span className="text-sm font-medium">{org.name}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant={activeOrg?.id === org.id ? "secondary" : "outline"}
+                    onClick={() => handleSetActive(org.id)}
+                    disabled={activeOrg?.id === org.id}
+                  >
+                    {activeOrg?.id === org.id ? "Active" : "Set Active"}
+                  </Button>
+                </div>
+              ))
+            )}
+          </div>
         </CardContent>
       </Card>
     </Example>

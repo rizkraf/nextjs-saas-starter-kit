@@ -23,14 +23,20 @@ export async function GET() {
       where: { organizationId: session.session.activeOrganizationId },
       include: {
         plan: true,
-        transactions: {
-          orderBy: { createdAt: "desc" },
-          take: 5,
-        },
       },
     });
 
-    return NextResponse.json(subscription);
+    // Fetch all transactions for the organization
+    const transactions = await prisma.transaction.findMany({
+      where: { organizationId: session.session.activeOrganizationId },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+
+    return NextResponse.json({
+      ...subscription,
+      transactions,
+    });
   } catch (error) {
     console.error("Failed to fetch subscription:", error);
     return NextResponse.json(

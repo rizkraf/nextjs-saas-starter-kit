@@ -79,7 +79,7 @@ export default function SignInPage() {
         if (result.error) {
           setServerError(result.error.message || "Failed to sign in");
         } else {
-          router.push("/");
+          router.push("/dashboard");
           router.refresh();
         }
       } catch {
@@ -96,7 +96,7 @@ export default function SignInPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: "/dashboard",
       });
     } catch {
       setServerError("Failed to sign in with Google");

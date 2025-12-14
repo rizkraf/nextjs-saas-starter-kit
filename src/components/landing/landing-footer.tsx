@@ -57,7 +57,7 @@ export function LandingFooter() {
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
-                  href="https://github.com"
+                  href="https://github.com/rizkraf/nextjs-saas-starter-kit"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
@@ -68,16 +68,6 @@ export function LandingFooter() {
                     className="size-4"
                   />
                   GitHub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Dokumentasi
                 </Link>
               </li>
               <li>
@@ -95,7 +85,7 @@ export function LandingFooter() {
           <p>
             Dibangun dengan{" "}
             <Link
-              href="https://github.com"
+              href="https://github.com/rizkraf/nextjs-saas-starter-kit"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-foreground underline-offset-4 hover:underline"

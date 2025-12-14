@@ -122,7 +122,9 @@ export default function BillingPage() {
   if (!activeOrg) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <p className="text-muted-foreground">Select an organization first.</p>
+        <p className="text-muted-foreground">
+          Pilih organisasi terlebih dahulu.
+        </p>
       </div>
     );
   }
@@ -133,9 +135,9 @@ export default function BillingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Billing</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Tagihan</h1>
         <p className="text-muted-foreground">
-          Manage subscription for {activeOrg.name}
+          Kelola langganan untuk {activeOrg.name}
         </p>
       </div>
 
@@ -149,7 +151,7 @@ export default function BillingPage() {
                 strokeWidth={2}
                 className="size-5"
               />
-              Active Subscription
+              Langganan Aktif
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -157,10 +159,10 @@ export default function BillingPage() {
               <div>
                 <p className="text-xl font-bold">{subscription.plan.name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {formatIDR(subscription.plan.priceMonthly)}/mo
+                  {formatIDR(subscription.plan.priceMonthly)}/bln
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Renews on: {formatDate(subscription.currentPeriodEnd)}
+                  Diperbarui pada: {formatDate(subscription.currentPeriodEnd)}
                 </p>
               </div>
               <Badge variant="default" className="bg-green-500">
@@ -174,8 +176,10 @@ export default function BillingPage() {
       {/* Plans */}
       <Card>
         <CardHeader>
-          <CardTitle>Available Plans</CardTitle>
-          <CardDescription>Choose a plan that fits your needs</CardDescription>
+          <CardTitle>Paket Tersedia</CardTitle>
+          <CardDescription>
+            Pilih paket yang sesuai dengan kebutuhan Anda
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -192,7 +196,7 @@ export default function BillingPage() {
                     <CardTitle className="flex items-center justify-between">
                       {plan.name}
                       {isCurrentPlan && (
-                        <Badge variant="default">Current</Badge>
+                        <Badge variant="default">Saat Ini</Badge>
                       )}
                     </CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
@@ -201,11 +205,11 @@ export default function BillingPage() {
                     <div>
                       <span className="text-3xl font-bold">
                         {plan.priceMonthly === 0
-                          ? "Free"
+                          ? "Gratis"
                           : formatIDR(plan.priceMonthly)}
                       </span>
                       {plan.priceMonthly > 0 && (
-                        <span className="text-muted-foreground">/mo</span>
+                        <span className="text-muted-foreground">/bln</span>
                       )}
                     </div>
                     <ul className="space-y-2 text-sm">
@@ -227,10 +231,10 @@ export default function BillingPage() {
                     >
                       {subscribeMutation.isPending &&
                       subscribeMutation.variables === plan.id
-                        ? "Loading..."
+                        ? "Memuat..."
                         : isCurrentPlan
-                          ? "Current Plan"
-                          : "Subscribe"}
+                          ? "Paket Saat Ini"
+                          : "Langganan"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -249,14 +253,14 @@ export default function BillingPage() {
               strokeWidth={2}
               className="size-5"
             />
-            Transaction History
+            Riwayat Transaksi
           </CardTitle>
-          <CardDescription>Your recent payment transactions</CardDescription>
+          <CardDescription>Transaksi pembayaran terakhir Anda</CardDescription>
         </CardHeader>
         <CardContent>
           {transactions.length === 0 ? (
             <p className="text-center py-8 text-muted-foreground">
-              No transactions yet.
+              Belum ada transaksi.
             </p>
           ) : (
             <div className="space-y-3">

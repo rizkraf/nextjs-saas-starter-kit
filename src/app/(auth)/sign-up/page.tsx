@@ -88,7 +88,7 @@ export default function SignUpPage() {
         if (result.error) {
           setServerError(result.error.message || "Failed to create account");
         } else {
-          router.push("/");
+          router.push("/dashboard");
           router.refresh();
         }
       } catch {
@@ -105,7 +105,7 @@ export default function SignUpPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: "/dashboard",
       });
     } catch {
       setServerError("Failed to sign up with Google");

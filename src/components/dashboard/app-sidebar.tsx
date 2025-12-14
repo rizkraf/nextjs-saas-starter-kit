@@ -50,9 +50,9 @@ import { authClient } from "@/lib/auth-client";
 
 const navItems = [
   { title: "Dashboard", href: "/dashboard", icon: Home01Icon },
-  { title: "Projects", href: "/dashboard/projects", icon: FolderLibraryIcon },
-  { title: "Members", href: "/dashboard/members", icon: UserGroupIcon },
-  { title: "Billing", href: "/dashboard/billing", icon: CreditCardIcon },
+  { title: "Proyek", href: "/dashboard/projects", icon: FolderLibraryIcon },
+  { title: "Anggota", href: "/dashboard/members", icon: UserGroupIcon },
+  { title: "Tagihan", href: "/dashboard/billing", icon: CreditCardIcon },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

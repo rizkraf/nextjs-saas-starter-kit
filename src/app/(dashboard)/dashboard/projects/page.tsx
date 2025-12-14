@@ -156,7 +156,9 @@ export default function ProjectsPage() {
   if (!activeOrg) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <p className="text-muted-foreground">Select an organization first.</p>
+        <p className="text-muted-foreground">
+          Pilih organisasi terlebih dahulu.
+        </p>
       </div>
     );
   }
@@ -165,9 +167,9 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Projects</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Proyek</h1>
           <p className="text-muted-foreground">
-            Manage projects for {activeOrg.name}
+            Kelola proyek untuk {activeOrg.name}
           </p>
         </div>
       </div>
@@ -175,16 +177,16 @@ export default function ProjectsPage() {
       {/* Create Project */}
       <Card>
         <CardHeader>
-          <CardTitle>Create Project</CardTitle>
+          <CardTitle>Buat Proyek</CardTitle>
           <CardDescription>
-            Add a new project to your organization
+            Tambahkan proyek baru ke organisasi Anda
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCreateProject} className="space-y-4">
             <div className="flex gap-2">
               <Input
-                placeholder="Project name"
+                placeholder="Nama proyek"
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 className="flex-1"
@@ -198,11 +200,11 @@ export default function ProjectsPage() {
                   strokeWidth={2}
                   className="size-4 mr-2"
                 />
-                {createMutation.isPending ? "Creating..." : "Create"}
+                {createMutation.isPending ? "Membuat..." : "Buat"}
               </Button>
             </div>
             <Textarea
-              placeholder="Project description (optional)"
+              placeholder="Deskripsi proyek (opsional)"
               value={newProjectDescription}
               onChange={(e) => setNewProjectDescription(e.target.value)}
               rows={2}
@@ -220,16 +222,16 @@ export default function ProjectsPage() {
               strokeWidth={2}
               className="size-5"
             />
-            All Projects
+            Semua Proyek
           </CardTitle>
-          <CardDescription>{projects.length} project(s)</CardDescription>
+          <CardDescription>{projects.length} proyek</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="text-muted-foreground text-center py-8">Loading...</p>
+            <p className="text-muted-foreground text-center py-8">Memuat...</p>
           ) : projects.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              No projects yet. Create your first project above.
+              Belum ada proyek. Buat proyek pertama Anda di atas.
             </p>
           ) : (
             <div className="space-y-2">
@@ -252,11 +254,10 @@ export default function ProjectsPage() {
                   <div>
                     <p className="font-medium">{project.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {project.description || "No description"}
+                      {project.description || "Tidak ada deskripsi"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Created:{" "}
-                      {new Date(project.createdAt).toLocaleDateString()}
+                      Dibuat: {new Date(project.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
@@ -303,20 +304,20 @@ export default function ProjectsPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{viewingProject?.name}</DialogTitle>
-            <DialogDescription>Project details</DialogDescription>
+            <DialogDescription>Detail proyek</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
               <Label className="text-sm font-medium text-muted-foreground">
-                Description
+                Deskripsi
               </Label>
               <p className="mt-1">
-                {viewingProject?.description || "No description"}
+                {viewingProject?.description || "Tidak ada deskripsi"}
               </p>
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">
-                Created At
+                Dibuat Pada
               </Label>
               <p className="mt-1">
                 {viewingProject?.createdAt
@@ -326,7 +327,7 @@ export default function ProjectsPage() {
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">
-                Project ID
+                ID Proyek
               </Label>
               <p className="mt-1 font-mono text-sm">{viewingProject?.id}</p>
             </div>
@@ -346,7 +347,7 @@ export default function ProjectsPage() {
               />
               Edit
             </Button>
-            <Button onClick={() => setViewDialogOpen(false)}>Close</Button>
+            <Button onClick={() => setViewDialogOpen(false)}>Tutup</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -355,29 +356,29 @@ export default function ProjectsPage() {
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Project</DialogTitle>
+            <DialogTitle>Edit Proyek</DialogTitle>
             <DialogDescription>
-              Update the project details below.
+              Perbarui detail proyek di bawah ini.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateProject}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-name">Name</Label>
+                <Label htmlFor="edit-name">Nama</Label>
                 <Input
                   id="edit-name"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  placeholder="Project name"
+                  placeholder="Nama proyek"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-description">Description</Label>
+                <Label htmlFor="edit-description">Deskripsi</Label>
                 <Textarea
                   id="edit-description"
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
-                  placeholder="Project description (optional)"
+                  placeholder="Deskripsi proyek (opsional)"
                   rows={3}
                 />
               </div>
@@ -388,13 +389,13 @@ export default function ProjectsPage() {
                 variant="outline"
                 onClick={() => setEditDialogOpen(false)}
               >
-                Cancel
+                Batal
               </Button>
               <Button
                 type="submit"
                 disabled={updateMutation.isPending || !editName.trim()}
               >
-                {updateMutation.isPending ? "Saving..." : "Save Changes"}
+                {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
               </Button>
             </DialogFooter>
           </form>

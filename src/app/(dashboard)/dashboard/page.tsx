@@ -62,12 +62,14 @@ export default function DashboardPage() {
   if (!activeOrg) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <h2 className="text-xl font-semibold mb-2">No Organization Selected</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          Belum Ada Organisasi Dipilih
+        </h2>
         <p className="text-muted-foreground mb-4">
-          Create or select an organization to get started.
+          Buat atau pilih organisasi untuk memulai.
         </p>
         <Button asChild>
-          <Link href="/">Go to Home</Link>
+          <Link href="/">Ke Beranda</Link>
         </Button>
       </div>
     );
@@ -77,10 +79,10 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">
-          Welcome to {activeOrg.name}
+          Selamat Datang di {activeOrg.name}
         </h1>
         <p className="text-muted-foreground">
-          Manage your organization's projects, members, and billing.
+          Kelola proyek, anggota, dan tagihan organisasi Anda.
         </p>
       </div>
 
@@ -88,7 +90,7 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Projects</CardTitle>
+            <CardTitle className="text-sm font-medium">Proyek</CardTitle>
             <HugeiconsIcon
               icon={FolderLibraryIcon}
               strokeWidth={2}
@@ -98,14 +100,14 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">{projects.length}</div>
             <p className="text-xs text-muted-foreground">
-              Active projects in this organization
+              Proyek aktif di organisasi ini
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Team Members</CardTitle>
+            <CardTitle className="text-sm font-medium">Anggota Tim</CardTitle>
             <HugeiconsIcon
               icon={UserGroupIcon}
               strokeWidth={2}
@@ -114,13 +116,17 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">Members with access</p>
+            <p className="text-xs text-muted-foreground">
+              Anggota dengan akses
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Current Plan</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Paket Saat Ini
+            </CardTitle>
             <HugeiconsIcon
               icon={CreditCardIcon}
               strokeWidth={2}
@@ -129,12 +135,12 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {subscriptionData?.plan.name || "Free"}
+              {subscriptionData?.plan.name || "Gratis"}
             </div>
             <p className="text-xs text-muted-foreground">
               {subscriptionData
-                ? "Active subscription"
-                : "No active subscription"}
+                ? "Langganan aktif"
+                : "Tidak ada langganan aktif"}
             </p>
           </CardContent>
         </Card>
@@ -144,23 +150,21 @@ export default function DashboardPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Recent Projects</CardTitle>
+            <CardTitle>Proyek Terbaru</CardTitle>
             <CardDescription>
-              Your latest projects in this organization
+              Proyek terbaru Anda di organisasi ini
             </CardDescription>
           </div>
           <Button size="sm" asChild>
-            <Link href="/dashboard/projects">View All</Link>
+            <Link href="/dashboard/projects">Lihat Semua</Link>
           </Button>
         </CardHeader>
         <CardContent>
           {projects.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No projects yet.</p>
+              <p>Belum ada proyek.</p>
               <Button className="mt-4" size="sm" asChild>
-                <Link href="/dashboard/projects">
-                  Create Your First Project
-                </Link>
+                <Link href="/dashboard/projects">Buat Proyek Pertama Anda</Link>
               </Button>
             </div>
           ) : (
@@ -173,11 +177,13 @@ export default function DashboardPage() {
                   <div>
                     <p className="font-medium">{project.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {project.description || "No description"}
+                      {project.description || "Tidak ada deskripsi"}
                     </p>
                   </div>
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/dashboard/projects/${project.id}`}>View</Link>
+                    <Link href={`/dashboard/projects/${project.id}`}>
+                      Lihat
+                    </Link>
                   </Button>
                 </div>
               ))}

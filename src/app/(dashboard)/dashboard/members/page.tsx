@@ -45,7 +45,9 @@ export default function MembersPage() {
   if (!activeOrg) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <p className="text-muted-foreground">Select an organization first.</p>
+        <p className="text-muted-foreground">
+          Pilih organisasi terlebih dahulu.
+        </p>
       </div>
     );
   }
@@ -64,9 +66,9 @@ export default function MembersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Team Members</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Anggota Tim</h1>
         <p className="text-muted-foreground">
-          Manage team members for {activeOrg.name}
+          Kelola anggota tim untuk {activeOrg.name}
         </p>
       </div>
 
@@ -78,18 +80,18 @@ export default function MembersPage() {
               strokeWidth={2}
               className="size-5"
             />
-            Members
+            Anggota
           </CardTitle>
-          <CardDescription>{members.length} member(s)</CardDescription>
+          <CardDescription>{members.length} anggota</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <p className="text-muted-foreground text-center py-8">
-              Loading members...
+              Memuat anggota...
             </p>
           ) : members.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              No members found.
+              Tidak ada anggota ditemukan.
             </p>
           ) : (
             <div className="space-y-3">
@@ -108,7 +110,7 @@ export default function MembersPage() {
                     </Avatar>
                     <div>
                       <p className="font-medium">
-                        {member.user.name || "No name"}
+                        {member.user.name || "Tanpa nama"}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {member.user.email}

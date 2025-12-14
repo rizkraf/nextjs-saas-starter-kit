@@ -1,4 +1,4 @@
-# Next.js SaaS Starter Kit (Nexus)
+# Next.js SaaS Starter Kit Indonesia
 
 Boilerplate SaaS lengkap dan siap produksi yang dibangun dengan teknologi modern. Dibuat untuk mempercepat proses development aplikasi SaaS Anda dengan fitur-fitur utama seperti autentikasi, manajemen organisasi, sistem pembayaran, dan tampilan dashboard yang modern.
 

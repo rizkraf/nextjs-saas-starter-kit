@@ -25,8 +25,8 @@ import { Input } from "@/components/ui/input";
 import { authClient, signIn } from "@/lib/auth-client";
 
 const signInSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.email("Mohon masukkan alamat email yang valid"),
+  password: z.string().min(1, "Kata sandi diperlukan"),
 });
 
 function GoogleIcon() {
@@ -77,13 +77,13 @@ export default function SignInPage() {
         });
 
         if (result.error) {
-          setServerError(result.error.message || "Failed to sign in");
+          setServerError(result.error.message || "Gagal masuk");
         } else {
           router.push("/dashboard");
           router.refresh();
         }
       } catch {
-        setServerError("An unexpected error occurred");
+        setServerError("Terjadi kesalahan yang tidak terduga");
       } finally {
         setIsLoading(false);
       }
@@ -99,7 +99,7 @@ export default function SignInPage() {
         callbackURL: "/dashboard",
       });
     } catch {
-      setServerError("Failed to sign in with Google");
+      setServerError("Gagal masuk dengan Google");
       setIsGoogleLoading(false);
     }
   };
@@ -107,8 +107,8 @@ export default function SignInPage() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-        <CardDescription>Sign in to your account to continue</CardDescription>
+        <CardTitle className="text-2xl font-bold">Selamat Datang</CardTitle>
+        <CardDescription>Masuk ke akun Anda untuk melanjutkan</CardDescription>
       </CardHeader>
       <CardContent>
         <FieldGroup>
@@ -120,9 +120,9 @@ export default function SignInPage() {
             disabled={isGoogleLoading || isLoading}
           >
             <GoogleIcon />
-            {isGoogleLoading ? "Signing in..." : "Continue with Google"}
+            {isGoogleLoading ? "Sedang masuk..." : "Lanjut dengan Google"}
           </Button>
-          <FieldSeparator>or</FieldSeparator>
+          <FieldSeparator>atau</FieldSeparator>
           <form
             id="sign-in-form"
             onSubmit={(e) => {
@@ -143,7 +143,7 @@ export default function SignInPage() {
                         id={field.name}
                         name={field.name}
                         type="email"
-                        placeholder="you@example.com"
+                        placeholder="anda@contoh.com"
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
@@ -163,7 +163,7 @@ export default function SignInPage() {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>Kata Sandi</FieldLabel>
                       <Input
                         id={field.name}
                         name={field.name}
@@ -193,15 +193,15 @@ export default function SignInPage() {
           className="w-full"
           disabled={isLoading || isGoogleLoading}
         >
-          {isLoading ? "Signing in..." : "Sign in"}
+          {isLoading ? "Sedang masuk..." : "Masuk"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          Belum punya akun?{" "}
           <Link
             href="/sign-up"
             className="font-medium text-primary hover:underline"
           >
-            Sign up
+            Daftar
           </Link>
         </p>
       </CardFooter>

@@ -27,13 +27,13 @@ import { authClient, signUp } from "@/lib/auth-client";
 const signUpSchema = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
-  email: z.email("Please enter a valid email address"),
+    .min(2, "Nama harus minimal 2 karakter")
+    .max(50, "Nama maksimal 50 karakter"),
+  email: z.email("Mohon masukkan alamat email yang valid"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(100, "Password must be at most 100 characters"),
+    .min(8, "Kata sandi harus minimal 8 karakter")
+    .max(100, "Kata sandi maksimal 100 karakter"),
 });
 
 function GoogleIcon() {
@@ -86,13 +86,13 @@ export default function SignUpPage() {
         });
 
         if (result.error) {
-          setServerError(result.error.message || "Failed to create account");
+          setServerError(result.error.message || "Gagal membuat akun");
         } else {
           router.push("/dashboard");
           router.refresh();
         }
       } catch {
-        setServerError("An unexpected error occurred");
+        setServerError("Terjadi kesalahan yang tidak terduga");
       } finally {
         setIsLoading(false);
       }
@@ -108,7 +108,7 @@ export default function SignUpPage() {
         callbackURL: "/dashboard",
       });
     } catch {
-      setServerError("Failed to sign up with Google");
+      setServerError("Gagal mendaftar dengan Google");
       setIsGoogleLoading(false);
     }
   };
@@ -116,8 +116,8 @@ export default function SignUpPage() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-        <CardDescription>Enter your details to get started</CardDescription>
+        <CardTitle className="text-2xl font-bold">Buat Akun</CardTitle>
+        <CardDescription>Masukkan detail Anda untuk memulai</CardDescription>
       </CardHeader>
       <CardContent>
         <FieldGroup>
@@ -129,9 +129,9 @@ export default function SignUpPage() {
             disabled={isGoogleLoading || isLoading}
           >
             <GoogleIcon />
-            {isGoogleLoading ? "Signing up..." : "Continue with Google"}
+            {isGoogleLoading ? "Sedang mendaftar..." : "Lanjut dengan Google"}
           </Button>
-          <FieldSeparator>or</FieldSeparator>
+          <FieldSeparator>atau</FieldSeparator>
           <form
             id="sign-up-form"
             onSubmit={(e) => {
@@ -147,12 +147,12 @@ export default function SignUpPage() {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>Nama</FieldLabel>
                       <Input
                         id={field.name}
                         name={field.name}
                         type="text"
-                        placeholder="John Doe"
+                        placeholder="Bambang Pamungkas"
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
@@ -177,7 +177,7 @@ export default function SignUpPage() {
                         id={field.name}
                         name={field.name}
                         type="email"
-                        placeholder="you@example.com"
+                        placeholder="anda@contoh.com"
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
@@ -197,7 +197,7 @@ export default function SignUpPage() {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>Kata Sandi</FieldLabel>
                       <Input
                         id={field.name}
                         name={field.name}
@@ -227,15 +227,15 @@ export default function SignUpPage() {
           className="w-full"
           disabled={isLoading || isGoogleLoading}
         >
-          {isLoading ? "Creating account..." : "Sign up"}
+          {isLoading ? "Sedang membuat akun..." : "Daftar"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
+          Sudah punya akun?{" "}
           <Link
             href="/sign-in"
             className="font-medium text-primary hover:underline"
           >
-            Sign in
+            Masuk
           </Link>
         </p>
       </CardFooter>

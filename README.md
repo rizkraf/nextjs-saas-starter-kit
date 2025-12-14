@@ -87,8 +87,32 @@ Boilerplate SaaS lengkap dan siap produksi yang dibangun dengan teknologi modern
    - `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`
    - `MIDTRANS_SERVER_KEY`, `MIDTRANS_CLIENT_KEY`
 
-4. **Setup Database**
-   Push schema Prisma ke database Anda:
+4. **Konfigurasi Midtrans (Pembayaran)**
+
+   - Daftar akun di [Midtrans Dashboard](https://dashboard.midtrans.com/).
+   - Ambil **Server Key** dan **Client Key** dari menu `Settings > Access Keys`.
+   - Update `.env`:
+     ```env
+     MIDTRANS_SERVER_KEY=...
+     MIDTRANS_CLIENT_KEY=...
+     MIDTRANS_IS_PRODUCTION=false # Set true untuk mode produksi
+     ```
+   - **Setup Webhook (Penting):**
+     Agar status pembayaran terupdate otomatis, atur **Notification URL** di dashboard Midtrans ke:
+     `https://domain-anda.com/api/billing/webhook`
+     _(Gunakan Cloudflare Tunnel untuk testing lokal)_
+     ```bash
+     npx cloudflared tunnel --url http://localhost:3000
+     ```
+
+5. **Setup Database**
+   Pastikan Docker sudah berjalan, lalu jalankan perintah berikut untuk memulai container database:
+
+   ```bash
+   bun run db:start
+   ```
+
+   Setelah database berjalan, push schema Prisma:
 
    ```bash
    bun run db:push
@@ -100,7 +124,7 @@ Boilerplate SaaS lengkap dan siap produksi yang dibangun dengan teknologi modern
    bun run db:seed
    ```
 
-5. **Jalankan Project**
+6. **Jalankan Project**
    Jalankan server development lokal:
 
    ```bash

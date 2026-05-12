@@ -137,11 +137,11 @@ function BillingStatus() {
           )}
           <div className="flex gap-2">
             <Button asChild className="flex-1">
-              <Link href="/">Back to Home</Link>
+              <Link href="/dashboard/billing">Back to Home</Link>
             </Button>
             {isError && (
               <Button variant="outline" asChild className="flex-1">
-                <Link href="/">Try Again</Link>
+                <Link href="/dashboard/billing">Try Again</Link>
               </Button>
             )}
           </div>

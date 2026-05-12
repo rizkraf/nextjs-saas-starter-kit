@@ -59,6 +59,18 @@ export default function DashboardPage() {
     enabled: !!orgId,
   });
 
+  const { data: members = [] } = useQuery({
+    queryKey: ["members", orgId],
+    queryFn: async () => {
+      if (!orgId) return [];
+      const result = await authClient.organization.listMembers({
+        query: { organizationId: orgId },
+      });
+      return result.data?.members || [];
+    },
+    enabled: !!orgId,
+  });
+
   if (!activeOrg) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -115,7 +127,7 @@ export default function DashboardPage() {
             />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1</div>
+            <div className="text-2xl font-bold">{members.length}</div>
             <p className="text-xs text-muted-foreground">
               Anggota dengan akses
             </p>

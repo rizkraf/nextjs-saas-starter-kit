@@ -25,6 +25,20 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    // Check permission
+    const hasPermission = await auth.api.hasPermission({
+      headers: await headers(),
+      body: {
+        permission: {
+          project: ["read"],
+        },
+      },
+    });
+
+    if (!hasPermission) {
+      return NextResponse.json({ error: "Permission denied" }, { status: 403 });
+    }
+
     const project = await prisma.project.findFirst({
       where: {
         id,

@@ -19,24 +19,17 @@ export async function POST(request: NextRequest) {
       fraud_status: fraudStatus,
     } = body;
 
-    // Verify signature (skip in development for testing)
-    if (process.env.NODE_ENV !== "development") {
-      const isValid = verifySignature(
-        orderId,
-        statusCode,
-        grossAmount,
-        signatureKey,
-      );
+    // Verify signature
+    const isValid = verifySignature(
+      orderId,
+      statusCode,
+      grossAmount,
+      signatureKey,
+    );
 
-      if (!isValid) {
-        console.error("Invalid Midtrans signature for order:", orderId);
-        return NextResponse.json(
-          { error: "Invalid signature" },
-          { status: 403 },
-        );
-      }
-    } else {
-      console.log("⚠️ Skipping signature verification in development mode");
+    if (!isValid) {
+      console.error("Invalid Midtrans signature for order:", orderId);
+      return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
     }
 
     // Find transaction
